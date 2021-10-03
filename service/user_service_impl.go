@@ -20,10 +20,12 @@ func (service *UserServiceImpl) Create(ctx context.Context, request user.UserCre
 	defer helper.CommitorRollback(tx)
 
 	user := domain.User{
-		Fullname: request.Name,
+		Fullname: request.Fullname,
+		Email:    request.Email,
+		Password: request.Password,
 	}
 
-	return user
+	return helper.ToUserResponse(user)
 }
 
 func (service *UserServiceImpl) Update(ctx context.Context, request user.UserUpdateRequest) user.UserResponse {
