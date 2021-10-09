@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"github.com/go-playground/validator/v10"
 	"project_go/helper"
 	"project_go/model/domain"
 	"project_go/model/web/user"
@@ -12,9 +13,13 @@ import (
 type UserServiceImpl struct {
 	UserRepository repository.UserRepositoryImpl
 	DB             *sql.DB
+	Validate       *validator.Validate
 }
 
 func (service *UserServiceImpl) Create(ctx context.Context, request user.UserCreateRequest) user.UserResponse {
+	err := service.Validate.Struct(request)
+	helper.PanicIfError(err)
+
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitorRollback(tx)
@@ -33,6 +38,9 @@ func (service *UserServiceImpl) Create(ctx context.Context, request user.UserCre
 }
 
 func (service *UserServiceImpl) Update(ctx context.Context, request user.UserUpdateRequest) user.UserResponse {
+	err := service.Validate.Struct(request)
+	helper.PanicIfError(err)
+
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitorRollback(tx)
