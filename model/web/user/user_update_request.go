@@ -6,4 +6,5 @@ type UserUpdateRequest struct {
 	Password       string
 	ForgotPassword string
 	RoleId         int
+	Id             int
 }
